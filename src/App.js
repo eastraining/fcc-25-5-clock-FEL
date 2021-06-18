@@ -1,10 +1,10 @@
-import React from 'react';
+import {useState} from 'react';
 import './App.css';
 
 function App() {
-  const [breakLength, setBreakLength] = React.useState(5);
-  const [sessionLength, setSessionLength] = React.useState(25);
-  const [sessionStatus, setSession] = React.useState('');
+  const [breakLength, setBreakLength] = useState(5);
+  const [sessionLength, setSessionLength] = useState(25);
+  const [sessionStatus, setSession] = useState('');
 
   return (
     <div className="App">

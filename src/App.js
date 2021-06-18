@@ -1,23 +1,32 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
 
 function App() {
+  const [breakLength, setBreakLength] = React.useState(5);
+  const [sessionLength, setSessionLength] = React.useState(25);
+  const [sessionStatus, setSession] = React.useState('');
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div id="break-label">
+        Break Length: <span id="break-length">{breakLength}</span>
+      </div>
+      <button id="break-increment" onClick={() => setBreakLength(breakLength + 1)}>+</button>
+      <button id="break-decrement" onClick={() => setBreakLength(breakLength - 1)}>-</button>
+      <div id="session-label">
+        Session Length: <span id="session-length">{sessionLength}</span>
+      </div>
+      <button id="session-increment" onClick={() => setSessionLength(sessionLength + 1)}>+</button>
+      <button id="session-decrement" onClick={() => setSessionLength(sessionLength - 1)}>-</button>
+      <div id="timer-label">
+        {sessionStatus} {/* TODO: Display whether timer is not running, or in session or break */}
+      </div>
+      <div id="time-left">
+        {/* TODO: Display how much time left on session or break */}
+      </div>
+      <button id="start_stop">Start/Stop</button>
+      <button id="reset">Reset Timer</button>
+      <audio id="beep"></audio>
     </div>
   );
 }

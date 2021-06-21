@@ -6,6 +6,55 @@ const INIT_BREAK = 5;
 const INIT_SESS = 25;
 const INIT_TIME_LEFT = INIT_SESS * 60;
 
+function Timer(props) {
+  // TODO: further tweaks to drop timer when unmount
+  useEffect(() => {
+    setInterval(() => {
+      props.setTimeLeft(props.timeLeft - 1);
+      if (props.timeLeft <= 0) {
+        props.beepSoundRef.current.currentTime = 0;
+        props.beepSoundRef.current.play();
+        return () => {
+          const newSessionStatus = props.sessionStatus === "Session" ? "Break" : "Session";
+          props.setSessionStatus(newSessionStatus);
+          props.setTimeLeft(newSessionStatus === "Session" ? props.sessionLength * 60 : props.breakLength * 60);
+        }
+      }
+    }, 1000);
+  });
+  let minLeft, secLeft;
+    minLeft = Math.floor(props.timeLeft / 60);
+    secLeft = (props.timeLeft % 60).toLocaleString([], {
+      minimumIntegerDigits: 2,
+      useGrouping: false
+    });
+  return (
+    <div id="time-left">
+      {`${minLeft}:${secLeft}`}
+    </div>
+  )
+}
+
+function TimeLeft(props) {
+  if (props.timerRunning) {
+    return <Timer timerRunning={props.timerRunning} sessionLength={props.sessionLength} breakLength={props.breakLength}
+      sessionStatus={props.sessionStatus} setSessionStatus={props.setSessionStatus}
+      timeLeft={props.timeLeft} setTimeLeft={props.setTimeLeft} beepSoundRef={props.beepSoundRef} />;
+  } else {  
+    let minLeft, secLeft;
+    minLeft = Math.floor(props.timeLeft / 60);
+    secLeft = (props.timeLeft % 60).toLocaleString([], {
+      minimumIntegerDigits: 2,
+      useGrouping: false
+    });
+    return (
+      <div id="time-left">
+        {`${minLeft}:${secLeft}`}
+      </div>
+    )
+  }
+}
+
 function App() {
   const [breakLength, setBreakLength] = useState(INIT_BREAK);
   const [sessionLength, setSessionLength] = useState(INIT_SESS);
@@ -57,53 +106,20 @@ function App() {
   }
   
   const beepSoundRef = useRef(null);
-  var clockTicker = useRef(null);
-  const useSessionInit = () => {useEffect(() => {
-    clearInterval(clockTicker.current);
-    clockTicker.current = setInterval(() => {
-      console.log(timeLeft);
-      setTimeLeft(timeLeft - 1);
-      if (timeLeft <= 0) {
-        beepSoundRef.current.currentTime = 0;
-        beepSoundRef.current.play();
-        clearInterval(clockTicker.current);
-        const newSessionStatus = sessionStatus === "Session" ? "Break" : "Session"
-        setSessionStatus(newSessionStatus);
-        setTimeLeft(newSessionStatus === "Session" ? sessionLength * 60 : breakLength * 60);
-        useSessionInit();
-      }
-    }, 1000);
-  })};
   const toggleTimer = () => {
-    const timerStatus = !timerRunning;
-    setTimerRunning(timerStatus);
-    if (timerStatus) {
-      useSessionInit();
-    } else {
-      beepSoundRef.current.pause();
-      beepSoundRef.current.currentTime = 0;
-      console.log(clockTicker.current, "off");
-      clearInterval(clockTicker.current);
-    }
+    beepSoundRef.current.pause();
+    beepSoundRef.current.currentTime = 0;
+    setTimerRunning(!timerRunning);
   }
   const resetTimer = () => {
     beepSoundRef.current.pause();
     beepSoundRef.current.currentTime = 0;
-    console.log(clockTicker.current, "reset");
-    clearInterval(clockTicker.current);
+    setTimerRunning(false);
     setBreakLength(INIT_BREAK);
     setSessionLength(INIT_SESS);
     setSessionStatus("Session");
     setTimeLeft(INIT_TIME_LEFT);
-    setTimerRunning(false);
   }
-
-  let minLeft, secLeft;
-  minLeft = Math.floor(timeLeft / 60);
-  secLeft = (timeLeft % 60).toLocaleString([], {
-    minimumIntegerDigits: 2,
-    useGrouping: false
-  });
 
   return (
     <div className="App">
@@ -120,9 +136,9 @@ function App() {
       <div id="timer-label">
         {sessionStatus} 
       </div>
-      <div id="time-left">
-        {`${minLeft}:${secLeft}`} 
-      </div>
+      <TimeLeft timerRunning={timerRunning} sessionLength={sessionLength} breakLength={breakLength}
+      sessionStatus={sessionStatus} setSessionStatus={setSessionStatus}
+      timeLeft={timeLeft} setTimeLeft={setTimeLeft} beepSoundRef={beepSoundRef} />
       <button id="start_stop" onClick={toggleTimer}>Start/Stop</button>
       <button id="reset" onClick={resetTimer}>Reset Timer</button>
       <audio id="beep" ref={beepSoundRef} src={BEEP_SRC} preload="auto"></audio>

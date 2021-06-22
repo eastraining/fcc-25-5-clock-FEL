@@ -6,28 +6,33 @@ const INIT_BREAK = 5;
 const INIT_SESS = 25;
 const INIT_TIME_LEFT = INIT_SESS * 60;
 
-function Timer(props) {
+function TimeLeft(props) {
   // TODO: further tweaks to drop timer when unmount
   useEffect(() => {
-    setInterval(() => {
-      props.setTimeLeft(props.timeLeft - 1);
-      if (props.timeLeft <= 0) {
-        props.beepSoundRef.current.currentTime = 0;
-        props.beepSoundRef.current.play();
-        return () => {
+    let clocktimer = null;
+    if (props.timerRunning) {
+      clocktimer = setInterval(() => {
+        if (props.timeLeft > 0) {
+          props.setTimeLeft(props.timeLeft - 1);
+        } else if (props.timeLeft <= 0) {
+          props.beepSoundRef.current.currentTime = 0;
+          props.beepSoundRef.current.play();
           const newSessionStatus = props.sessionStatus === "Session" ? "Break" : "Session";
           props.setSessionStatus(newSessionStatus);
           props.setTimeLeft(newSessionStatus === "Session" ? props.sessionLength * 60 : props.breakLength * 60);
-        }
-      }
-    }, 1000);
+      }}, 1000);
+    } else {
+      clearInterval(clocktimer);
+    }
   });
+
   let minLeft, secLeft;
-    minLeft = Math.floor(props.timeLeft / 60);
-    secLeft = (props.timeLeft % 60).toLocaleString([], {
-      minimumIntegerDigits: 2,
-      useGrouping: false
-    });
+  minLeft = Math.floor(props.timeLeft / 60);
+  secLeft = (props.timeLeft % 60).toLocaleString([], {
+    minimumIntegerDigits: 2,
+    useGrouping: false
+  });
+
   return (
     <div id="time-left">
       {`${minLeft}:${secLeft}`}
@@ -35,25 +40,25 @@ function Timer(props) {
   )
 }
 
-function TimeLeft(props) {
-  if (props.timerRunning) {
-    return <Timer timerRunning={props.timerRunning} sessionLength={props.sessionLength} breakLength={props.breakLength}
-      sessionStatus={props.sessionStatus} setSessionStatus={props.setSessionStatus}
-      timeLeft={props.timeLeft} setTimeLeft={props.setTimeLeft} beepSoundRef={props.beepSoundRef} />;
-  } else {  
-    let minLeft, secLeft;
-    minLeft = Math.floor(props.timeLeft / 60);
-    secLeft = (props.timeLeft % 60).toLocaleString([], {
-      minimumIntegerDigits: 2,
-      useGrouping: false
-    });
-    return (
-      <div id="time-left">
-        {`${minLeft}:${secLeft}`}
-      </div>
-    )
-  }
-}
+// function TimeLeft(props) {
+//   if (props.timerRunning) {
+//     return <Timer timerRunning={props.timerRunning} sessionLength={props.sessionLength} breakLength={props.breakLength}
+//       sessionStatus={props.sessionStatus} setSessionStatus={props.setSessionStatus}
+//       timeLeft={props.timeLeft} setTimeLeft={props.setTimeLeft} beepSoundRef={props.beepSoundRef} />;
+//   } else {  
+//     let minLeft, secLeft;
+//     minLeft = Math.floor(props.timeLeft / 60);
+//     secLeft = (props.timeLeft % 60).toLocaleString([], {
+//       minimumIntegerDigits: 2,
+//       useGrouping: false
+//     });
+//     return (
+//       <div id="time-left">
+//         {`${minLeft}:${secLeft}`}
+//       </div>
+//     )
+//   }
+// }
 
 function App() {
   const [breakLength, setBreakLength] = useState(INIT_BREAK);

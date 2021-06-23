@@ -11,23 +11,29 @@ function TimeLeft(props) {
   useEffect(() => {
     let clocktimer = null;
     if (props.timerRunning) {
-      clocktimer = setInterval(() => {
-        if (props.timeLeft > 0) {
-          props.setTimeLeft(props.timeLeft - 1);
-        } else if (props.timeLeft <= 0) {
-          props.beepSoundRef.current.currentTime = 0;
-          props.beepSoundRef.current.play();
-          const newSessionStatus = props.sessionStatus === "Session" ? "Break" : "Session";
-          props.setSessionStatus(newSessionStatus);
-          props.setTimeLeft(newSessionStatus === "Session" ? props.sessionLength * 60 : props.breakLength * 60);
-      }}, 1000);
-    } else {
-      clearInterval(clocktimer);
+      clocktimer = setInterval(
+        () => {
+          if (props.timeLeft > 0) {
+            props.setTimeLeft(props.timeLeft - 1);
+          } else if (props.timeLeft <= 0) {
+            props.beepSoundRef.current.currentTime = 0;
+            props.beepSoundRef.current.play();
+            clearInterval(clocktimer);
+            const newSessionStatus = props.sessionStatus === "Session" ? "Break" : "Session";
+            props.setSessionStatus(newSessionStatus);
+            props.setTimeLeft(newSessionStatus === "Session" ? props.sessionLength * 60 : props.breakLength * 60);
+          }
+        }, 1000
+      );
     }
+    return () => {clearInterval(clocktimer)};
   });
 
   let minLeft, secLeft;
-  minLeft = Math.floor(props.timeLeft / 60);
+  minLeft = (Math.floor(props.timeLeft / 60)).toLocaleString([], {
+    minimumIntegerDigits: 2,
+    useGrouping: false
+  });
   secLeft = (props.timeLeft % 60).toLocaleString([], {
     minimumIntegerDigits: 2,
     useGrouping: false
@@ -40,26 +46,6 @@ function TimeLeft(props) {
   )
 }
 
-// function TimeLeft(props) {
-//   if (props.timerRunning) {
-//     return <Timer timerRunning={props.timerRunning} sessionLength={props.sessionLength} breakLength={props.breakLength}
-//       sessionStatus={props.sessionStatus} setSessionStatus={props.setSessionStatus}
-//       timeLeft={props.timeLeft} setTimeLeft={props.setTimeLeft} beepSoundRef={props.beepSoundRef} />;
-//   } else {  
-//     let minLeft, secLeft;
-//     minLeft = Math.floor(props.timeLeft / 60);
-//     secLeft = (props.timeLeft % 60).toLocaleString([], {
-//       minimumIntegerDigits: 2,
-//       useGrouping: false
-//     });
-//     return (
-//       <div id="time-left">
-//         {`${minLeft}:${secLeft}`}
-//       </div>
-//     )
-//   }
-// }
-
 function App() {
   const [breakLength, setBreakLength] = useState(INIT_BREAK);
   const [sessionLength, setSessionLength] = useState(INIT_SESS);
@@ -71,7 +57,7 @@ function App() {
     return length > 59 ? length : length + 1;
   }
   const decreaseLength = length => {
-    return length < 1 ? length: length - 1;
+    return length < 2 ? length: length - 1;
   }
   const tweakLength = (action, length) => {
     if (timerRunning) {return};
@@ -110,7 +96,7 @@ function App() {
     }
   }
   
-  const beepSoundRef = useRef(null);
+  const beepSoundRef = useRef();
   const toggleTimer = () => {
     beepSoundRef.current.pause();
     beepSoundRef.current.currentTime = 0;

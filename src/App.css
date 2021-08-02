@@ -10,12 +10,50 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--primary-color);
+}
+
+html {
+  background-color: var(--site-black);
 }
 
 .App {
   text-align: center;
   font-family: var(--site-font);
+  background-color: var(--primary-color);
   color: var(--site-white);
   text-decoration: none;
+  padding: 5em 0em;
+  border-radius: 0.5em;
+}
+
+#top-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 500px;
+  margin-bottom: 3em;
+}
+
+#timer-label{
+  font-size: 3em;
+}
+#time-left{
+  font-size: 5em;
+}
+
+button {
+  font-family: var(--site-font);
+}
+
+.timer-button {
+  margin: 1em;
+  font-size: 1.3em;
+}
+
+#footer {
+  padding-top: 5em;
+}
+
+#footer a {
+  color: var(--site-white);
 }

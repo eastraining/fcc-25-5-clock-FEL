@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/fcc-25-5-clock-FEL/static/css/main.409e95b9.chunk.css",
+    "main.js": "/fcc-25-5-clock-FEL/static/js/main.7fb13b54.chunk.js",
+    "main.js.map": "/fcc-25-5-clock-FEL/static/js/main.7fb13b54.chunk.js.map",
+    "runtime-main.js": "/fcc-25-5-clock-FEL/static/js/runtime-main.b631e338.js",
+    "runtime-main.js.map": "/fcc-25-5-clock-FEL/static/js/runtime-main.b631e338.js.map",
+    "static/js/2.de9c7a37.chunk.js": "/fcc-25-5-clock-FEL/static/js/2.de9c7a37.chunk.js",
+    "static/js/2.de9c7a37.chunk.js.map": "/fcc-25-5-clock-FEL/static/js/2.de9c7a37.chunk.js.map",
+    "index.html": "/fcc-25-5-clock-FEL/index.html",
+    "static/css/main.409e95b9.chunk.css.map": "/fcc-25-5-clock-FEL/static/css/main.409e95b9.chunk.css.map",
+    "static/js/2.de9c7a37.chunk.js.LICENSE.txt": "/fcc-25-5-clock-FEL/static/js/2.de9c7a37.chunk.js.LICENSE.txt",
+    "static/media/beep.3e8c5594.mp3": "/fcc-25-5-clock-FEL/static/media/beep.3e8c5594.mp3"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.b631e338.js",
+    "static/js/2.de9c7a37.chunk.js",
+    "static/css/main.409e95b9.chunk.css",
+    "static/js/main.7fb13b54.chunk.js"
+  ]
+}
